@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MyTempMail</string>
+    <string name="showMailName">Name</string>
+    <string name="showMailDate">19 Jul 2021</string>
+    <string name="showMailSubject">Lets go to the football game</string>
+    <string name="showMailAttachmentName">Iometer.pdf</string>
+    <string name="showMailAttachmentSize">900 Kb</string>
+    <string name="ItemMailSubject">Here is the mail subject.</string>
+</resources>
