@@ -44,6 +44,9 @@ class MainFragment:Fragment(),RvMailsAdapter.Interaction {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        tvEmptyInbox.visibility= View.VISIBLE
+        ivEmptyInbox.visibility= View.VISIBLE
+
         viewModel=activity?.let {
             ViewModelProvider(this).get(MainViewModel::class.java)
         }?: throw Exception("Invalid Activity")   //if activity is null throw this exception
@@ -101,7 +104,6 @@ class MainFragment:Fragment(),RvMailsAdapter.Interaction {
             adapter=blogListAdapter
         }
 
-
     }
 
 
@@ -124,6 +126,10 @@ class MainFragment:Fragment(),RvMailsAdapter.Interaction {
 
                     mainViewState.emailsList?.let { mailLists->
                         //set Credentials to the edit text
+                        if (mailLists.isNotEmpty()){
+                            tvEmptyInbox.visibility= View.INVISIBLE
+                            ivEmptyInbox.visibility= View.INVISIBLE
+                        }
                         viewModel.setMailsListData(mailLists)
                     }
 

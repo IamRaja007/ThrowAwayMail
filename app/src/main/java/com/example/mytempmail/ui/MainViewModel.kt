@@ -1,5 +1,6 @@
 package com.example.mytempmail.ui
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -11,6 +12,7 @@ import com.example.mytempmail.ui.state.MainEventState
 import com.example.mytempmail.ui.state.MainViewState
 import com.example.mytempmail.util.AbsentLiveData
 import com.example.mytempmail.util.DataState
+import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainViewModel:ViewModel() {
 
