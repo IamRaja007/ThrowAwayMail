@@ -88,7 +88,7 @@
                         android:layout_marginStart="14dp"
                         android:layout_marginTop="32dp"
                         android:layout_marginEnd="363dp"
-                        android:src="@drawable/demo_image"
+                        android:src="@drawable/default_image"
                         app:civ_border_color="#FF000000"
                         app:civ_border_width="1dp"
                         app:layout_constraintBottom_toBottomOf="parent"

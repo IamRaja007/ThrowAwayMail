@@ -1,18 +1,14 @@
 package com.example.mytempmail.ui
 
-import android.Manifest
 import android.app.DownloadManager
 import android.content.Context
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mytempmail.DataStateListener
@@ -22,8 +18,6 @@ import com.example.mytempmail.models.ShowEmailModel
 import com.example.mytempmail.ui.state.MainEventState
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_showmail.*
-import java.io.File
-import java.net.URL
 
 const val Domain = "domain"
 const val Login = "login"
@@ -108,7 +102,7 @@ class MailFragment : Fragment() {
         tvName.text = info
         Picasso.get().load(
             "https://ui-avatars.com/api/?background=234&color=fff&size=256&rounded=true&name=$info"
-        ).placeholder(R.drawable.demo_image).into(circleImageView)
+        ).placeholder(R.drawable.default_image).into(circleImageView)
 
         if (mail.attachments?.isNotEmpty()!!) {
             setDownloadContents(mail.attachments)

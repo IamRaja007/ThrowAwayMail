@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytempmail.R
 import com.example.mytempmail.models.MailBoxModel
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_showmail.*
 import kotlinx.android.synthetic.main.item_row_mail.view.*
 import kotlin.collections.ArrayList
 
@@ -72,11 +74,14 @@ class RvMailsAdapter(private val interaction: Interaction? = null) :
                     )
                 }
             }
-
-            itemView.tvName.text = SplitEmail(item.from!!)?.get(0) ?: "never"
+            val name=SplitEmail(item.from!!)?.get(0) ?: "noName"
+            itemView.tvName.text = name
             itemView.tvSubject.text = item.subject
             itemView.tvDate.text = item.date
             itemView.tvEmail.text = item.id
+            Picasso.get().load(
+                "https://ui-avatars.com/api/?background=234&color=fff&size=256&rounded=true&name=$name"
+            ).placeholder(R.drawable.default_image).into(itemView.circleImageViewMail)
 
         }
     }

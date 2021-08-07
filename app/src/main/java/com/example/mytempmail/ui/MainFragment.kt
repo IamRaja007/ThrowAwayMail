@@ -1,13 +1,18 @@
 package com.example.mytempmail.ui
 
 import android.app.AlarmManager
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.*
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -29,6 +34,7 @@ class MainFragment : Fragment(), RvMailsAdapter.Interaction {
     lateinit var viewModel: MainViewModel //This will be reference to viewModel that we instantiated in main Activity
     lateinit var dataStateHandler: DataStateListener
     lateinit var emailsListAdapter: RvMailsAdapter
+    var tempEmail: String = ""
     var listMails: List<String>? = null
     lateinit var runnable: Runnable
     var handler = Handler(Looper.getMainLooper())
@@ -58,6 +64,13 @@ class MainFragment : Fragment(), RvMailsAdapter.Interaction {
             triggerGetGeneratedMailEvent()
         }
 
+        btncopy.setOnClickListener {
+            val clipboard: ClipboardManager =
+                requireActivity().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            val clipdata = ClipData.newPlainText("label", tempEmail)
+            clipboard.setPrimaryClip(clipdata)
+            Toast.makeText(requireContext(), "Email copied", Toast.LENGTH_SHORT).show()
+        }
         lookForNewMessages()
     }
 
@@ -118,7 +131,9 @@ class MainFragment : Fragment(), RvMailsAdapter.Interaction {
                 event.getContentIfNotHandled()?.let { mainViewState ->
                     mainViewState.email?.let { email ->
                         //set email in the editText email position
+                        tempEmail = email
                         viewModel.setEmail(email)
+//                        initCopyToClipboard()
                     }
 
                     mainViewState.emailsList?.let { mailLists ->
@@ -129,14 +144,11 @@ class MainFragment : Fragment(), RvMailsAdapter.Interaction {
                         }
                         viewModel.setMailsListData(mailLists)
                     }
-
                 }
-
             }
-
         })
 
-        viewModel.viewState.observe(viewLifecycleOwner,{ viewState ->
+        viewModel.viewState.observe(viewLifecycleOwner, { viewState ->
 
             viewState.emailsList?.let { emailslist ->
                 //set email messages data
