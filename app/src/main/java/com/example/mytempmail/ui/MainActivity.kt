@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity(),DataStateListener {
         viewModel= ViewModelProvider(this).get(MainViewModel::class.java)
 
         showMainFragment()
-
     }
 
     private fun showMainFragment() {
@@ -48,22 +47,20 @@ class MainActivity : AppCompatActivity(),DataStateListener {
                 event.getContentIfNotHandled()?.let {message->
                     showToast(message)
                 }
-
             }
         }
 
     }
 
-    fun showToast(message:String){
+    private fun showToast(message:String){
         Toast.makeText(this,message, Toast.LENGTH_SHORT).show()
     }
-    fun showProgressBar(isVisible:Boolean){
+    private fun showProgressBar(isVisible:Boolean){
         if(isVisible){
             progress_bar.visibility= View.VISIBLE
         }
         else{
             progress_bar.visibility= View.GONE
         }
-
     }
 }

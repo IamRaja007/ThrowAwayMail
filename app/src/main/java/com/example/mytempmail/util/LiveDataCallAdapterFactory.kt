@@ -7,7 +7,8 @@ import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-class LiveDataCallAdapterFactory : Factory() {  // A factory class is a class that produces objects. In this case, its a live data call adapter factory so it produces live data call adapters
+class LiveDataCallAdapterFactory :
+    Factory() {  // A factory class is a class that produces objects. In this case, its a live data call adapter factory so it produces live data call adapters
     override fun get(
         returnType: Type,
         annotations: Array<Annotation>,

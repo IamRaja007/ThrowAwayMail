@@ -24,32 +24,32 @@ import kotlinx.android.synthetic.main.fragment_showmail.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MainFragment:Fragment(),RvMailsAdapter.Interaction {
+class MainFragment : Fragment(), RvMailsAdapter.Interaction {
 
     lateinit var viewModel: MainViewModel //This will be reference to viewModel that we instantiated in main Activity
     lateinit var dataStateHandler: DataStateListener
-    lateinit var blogListAdapter: RvMailsAdapter
-    var listMails:List<String>?=null
+    lateinit var emailsListAdapter: RvMailsAdapter
+    var listMails: List<String>? = null
     lateinit var runnable: Runnable
-    var handler=Handler(Looper.getMainLooper())
+    var handler = Handler(Looper.getMainLooper())
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_main,container,false)
+        return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tvEmptyInbox.visibility= View.VISIBLE
-        ivEmptyInbox.visibility= View.VISIBLE
+        tvEmptyInbox.visibility = View.VISIBLE
+        ivEmptyInbox.visibility = View.VISIBLE
 
-        viewModel=activity?.let {
+        viewModel = activity?.let {
             ViewModelProvider(this).get(MainViewModel::class.java)
-        }?: throw Exception("Invalid Activity")   //if activity is null throw this exception
+        } ?: throw Exception("Invalid Activity")   //if activity is null throw this exception
 
         initRecyclerView()
         subscribeObservers()
@@ -59,33 +59,31 @@ class MainFragment:Fragment(),RvMailsAdapter.Interaction {
         }
 
         lookForNewMessages()
-
     }
 
-    fun lookForNewMessages(){
-        runnable= Runnable {
+    private fun lookForNewMessages() {
+        runnable = Runnable {
             triggerGetMailsEvent()
-            handler.postDelayed(runnable,5000) //every 5 sec, this handler will check for new messages
+            handler.postDelayed(
+                runnable,
+                5000
+            ) //every 5 sec, this handler will check for new messages in the inbox
         }
         handler.post(runnable)
     }
-
 
     override fun onStart() {
         super.onStart()
         triggerGetGeneratedMailEvent()
     }
 
-
-    private fun setUserFieldProperties(email:String){
-        tvGeneratedEmailShow.text=email
-        listMails=SplitEmail(email)
-        println("DEBUG: Set User field propertioes: ${email}")
+    private fun setEmailFieldProperties(email: String) {
+        tvGeneratedEmailShow.text = email
+        listMails = SplitEmail(email)
     }
 
     private fun triggerGetGeneratedMailEvent() {
         viewModel.setStateEvent(MainEventState.GetGeneratedEmail())
-        println("DEBUG: trigger get generated mail event${MainEventState.GetGeneratedEmail()}")
     }
 
     private fun triggerGetMailsEvent() {
@@ -96,39 +94,38 @@ class MainFragment:Fragment(),RvMailsAdapter.Interaction {
         }
     }
 
-    private fun initRecyclerView(){
+    private fun initRecyclerView() {
         rvShowMails.apply {
-            layoutManager=
+            layoutManager =
                 LinearLayoutManager(this@MainFragment.context)// we wrote activity because we are in a fragment
-            blogListAdapter= RvMailsAdapter(this@MainFragment)
-            adapter=blogListAdapter
+            emailsListAdapter = RvMailsAdapter(this@MainFragment)
+            adapter = emailsListAdapter
         }
 
     }
 
 
-    fun subscribeObservers(){  //we subscribe to all the observers that are in our viewModel. In this case we have two - dataState and eventState that we have to observe
+    private fun subscribeObservers() {  //we subscribe to all the observers that are in our viewModel. In this case we have two - dataState and eventState that we have to observe
         //Remember inside fragments, while using observers, use 'viewLifecycleOwner' and not 'this'
         viewModel.dataState.observe(viewLifecycleOwner, { dataState ->
-            println("DEBUG: dataState : {$dataState}")
 
             //Handling errors and Handling loading progress bar
             dataStateHandler.onDatStateChanged(dataState)
 
             //Handling Data
-            dataState.data?.let {  event ->  //if there is any incoming data then
+            dataState.data?.let { event ->  //if there is any incoming data then
 
-                event.getContentIfNotHandled()?.let { mainViewState->
-                    mainViewState.email?.let { email->
-                        //set Blog posts data
+                event.getContentIfNotHandled()?.let { mainViewState ->
+                    mainViewState.email?.let { email ->
+                        //set email in the editText email position
                         viewModel.setEmail(email)
                     }
 
-                    mainViewState.emailsList?.let { mailLists->
-                        //set Credentials to the edit text
-                        if (mailLists.isNotEmpty()){
-                            tvEmptyInbox.visibility= View.INVISIBLE
-                            ivEmptyInbox.visibility= View.INVISIBLE
+                    mainViewState.emailsList?.let { mailLists ->
+                        //set email lists to the inbox view
+                        if (mailLists.isNotEmpty()) {
+                            tvEmptyInbox.visibility = View.INVISIBLE
+                            ivEmptyInbox.visibility = View.INVISIBLE
                         }
                         viewModel.setMailsListData(mailLists)
                     }
@@ -139,56 +136,46 @@ class MainFragment:Fragment(),RvMailsAdapter.Interaction {
 
         })
 
-        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+        viewModel.viewState.observe(viewLifecycleOwner,{ viewState ->
 
-            viewState.emailsList?.let { blogslist ->
-                //set Blog posts data
-                println("DEBUG: Setting blog posts to recyclerView : {${blogslist}}")
-                blogListAdapter.submitList(blogslist)
+            viewState.emailsList?.let { emailslist ->
+                //set email messages data
+                emailsListAdapter.submitList(emailslist)
             }
 
-            viewState.email?.let { user ->
-                //set user data(credentials)
-                println("DEBUG: Setting user data : {${viewState.email}}")
-                setUserFieldProperties(user)
+            viewState.email?.let { mail ->
+                //set email
+                setEmailFieldProperties(mail)
             }
-
         })
     }
 
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        try{
-            dataStateHandler=context as DataStateListener
-        }catch (e: ClassCastException){
+        try {
+            dataStateHandler = context as DataStateListener
+        } catch (e: ClassCastException) {
             println("DEBUG: $context must implement DataStateListener interface ")
         }
     }
 
-    override fun onItemSelected(position: Int, item: MailBoxModel, itemID:Int) {
-        println("ADEBUG: click position is $position")
-        println("ADEBUG: click item is $item")
-        println("ADEBUG: click item is $itemID")
-        println("ADEBUG: domain is ${listMails?.get(1)}")
-        println("ADEBUG: login item is ${listMails?.get(0)}")
-        val DOMAIN=listMails?.get(1)
-        val LOGIN=listMails?.get(0)
-        val ITEM_ID=itemID
-
-        val fragment=MailFragment()
-        val bundle=Bundle()
-        bundle.putString("domain",DOMAIN)
-        bundle.putString("login",LOGIN)
-        bundle.putInt("itemID",ITEM_ID)
+    override fun onItemSelected(position: Int, item: MailBoxModel, itemID: Int) {
+        val DOMAIN = listMails?.get(1)
+        val LOGIN = listMails?.get(0)
+        val ITEM_ID = itemID
+        val fragment = MailFragment()
+        val bundle = Bundle()
+        bundle.putString("domain", DOMAIN)
+        bundle.putString("login", LOGIN)
+        bundle.putInt("itemID", ITEM_ID)
         fragment.arguments = bundle
 
-        val fragmentTransactor= activity?.supportFragmentManager?.beginTransaction()
-        fragmentTransactor?.replace(R.id.fragment_container,fragment)?.addToBackStack(null)?.commit()
-
+        val fragmentTransactor = activity?.supportFragmentManager?.beginTransaction()
+        fragmentTransactor?.replace(R.id.fragment_container, fragment)?.addToBackStack(null)
+            ?.commit()
     }
 
-    companion object{
+    companion object {
         fun SplitEmail(string: String): List<String>? {
             val index = string.indexOf('@')
             val prefix = string.substring(0, index)
@@ -200,13 +187,9 @@ class MainFragment:Fragment(),RvMailsAdapter.Interaction {
         }
     }
 
-
-
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(runnable)
     }
-
-
 
 }

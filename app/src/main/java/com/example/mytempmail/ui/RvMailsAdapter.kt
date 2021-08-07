@@ -14,7 +14,7 @@ import kotlin.collections.ArrayList
 class RvMailsAdapter(private val interaction: Interaction? = null) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val  DIFF_CALLBACK = object : DiffUtil.ItemCallback<MailBoxModel>() {
+    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MailBoxModel>() {
 
         override fun areItemsTheSame(oldItem: MailBoxModel, newItem: MailBoxModel): Boolean {
             return oldItem.id == newItem.id
@@ -66,25 +66,27 @@ class RvMailsAdapter(private val interaction: Interaction? = null) :
         fun bind(item: MailBoxModel) = with(itemView) {
             itemView.setOnClickListener {
                 item.id?.let { it1 ->
-                    interaction?.onItemSelected(adapterPosition, item,
-                        it1.toInt())
+                    interaction?.onItemSelected(
+                        adapterPosition, item,
+                        it1.toInt()
+                    )
                 }
             }
 
-            itemView.tvName.text= SplitEmail(item.from!!)?.get(0) ?: "never"
-            itemView.tvSubject.text=item.subject
-            itemView.tvDate.text=item.date
-            itemView.tvEmail.text=item.id
+            itemView.tvName.text = SplitEmail(item.from!!)?.get(0) ?: "never"
+            itemView.tvSubject.text = item.subject
+            itemView.tvDate.text = item.date
+            itemView.tvEmail.text = item.id
 
         }
     }
 
     interface Interaction {   //detecting clicks on each item of recycler view items
-        fun onItemSelected(position: Int, item: MailBoxModel,itemID:Int)
+        fun onItemSelected(position: Int, item: MailBoxModel, itemID: Int)
     }
 
-
 }
+
 fun SplitEmail(string: String): List<String>? {
     val index = string.indexOf('@')
     val prefix = string.substring(0, index)

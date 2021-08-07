@@ -14,19 +14,21 @@ import com.example.mytempmail.util.AbsentLiveData
 import com.example.mytempmail.util.DataState
 import kotlinx.android.synthetic.main.fragment_main.*
 
-class MainViewModel:ViewModel() {
+class MainViewModel : ViewModel() {
 
     private val _viewState: MutableLiveData<MainViewState> = MutableLiveData()  //for displaying
-    private val _eventState: MutableLiveData<MainEventState> = MutableLiveData() //for providing contents like get user and get blog posts
+    private val _eventState: MutableLiveData<MainEventState> =
+        MutableLiveData() //for providing contents like get user and get blog posts
 
     val viewState: LiveData<MainViewState>
         get() = _viewState
 
-    val dataState: LiveData<DataState<MainViewState>> = Transformations.switchMap(_eventState) { eventState ->
-        eventState?.let {
-            handleStateEvents(it)
+    val dataState: LiveData<DataState<MainViewState>> =
+        Transformations.switchMap(_eventState) { eventState ->
+            eventState?.let {
+                handleStateEvents(it)
+            }
         }
-    }
 
     fun handleStateEvents(stateEvent: MainEventState): LiveData<DataState<MainViewState>> {
 
@@ -35,11 +37,18 @@ class MainViewModel:ViewModel() {
                 return MainRepository.getGeneratedEmail()
             }
             is MainEventState.GetMailList -> {
-                return MainRepository.getMailBoxMessages(stateEvent.username,stateEvent.domain)             //  getUser(stateEvent.userID)
+                return MainRepository.getMailBoxMessages(
+                    stateEvent.username,
+                    stateEvent.domain
+                )             //  getUser(stateEvent.userID)
             }
 
-            is MainEventState.GetShowSingleMessage ->{
-                return MainRepository.showSelectedMessage(stateEvent.username,stateEvent.domain,stateEvent.id)
+            is MainEventState.GetShowSingleMessage -> {
+                return MainRepository.showSelectedMessage(
+                    stateEvent.username,
+                    stateEvent.domain,
+                    stateEvent.id
+                )
             }
 
             is MainEventState.None -> {
@@ -56,26 +65,26 @@ class MainViewModel:ViewModel() {
 
     }
 
-    fun setMailsListData(emailsList:List<MailBoxModel>){   //if there are some new blog posts. Notice that we haven't made blogPosts parameter nullable(?) here
-        val update=getCurrentViewStateOrNew()
-        update.emailsList=emailsList
-        _viewState.value=update
+    fun setMailsListData(emailsList: List<MailBoxModel>) {   //if there are some new blog posts. Notice that we haven't made blogPosts parameter nullable(?) here
+        val update = getCurrentViewStateOrNew()
+        update.emailsList = emailsList
+        _viewState.value = update
 
     }
 
-    fun setEmail(email:String){
-        val update=getCurrentViewStateOrNew()
-        update.email=email
-        _viewState.value=update
+    fun setEmail(email: String) {
+        val update = getCurrentViewStateOrNew()
+        update.email = email
+        _viewState.value = update
     }
 
-    fun setSelectedMail(Show:ShowEmailModel){
-        val update=getCurrentViewStateOrNew()
-        update.showMail=Show
-        _viewState.value=update
+    fun setSelectedMail(Show: ShowEmailModel) {
+        val update = getCurrentViewStateOrNew()
+        update.showMail = Show
+        _viewState.value = update
     }
 
-    fun setStateEvent(event:MainEventState){   //we set the stateEvent to trigger the whole switchmap process
-        _eventState.value=event
+    fun setStateEvent(event: MainEventState) {   //we set the stateEvent to trigger the whole switchmap process
+        _eventState.value = event
     }
 }

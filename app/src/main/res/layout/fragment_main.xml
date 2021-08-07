@@ -106,12 +106,13 @@ android:background="@color/yellow_light">
             android:layout_alignParentBottom="true"
             android:padding="12dp"
             android:layout_toEndOf="@id/ivMail"
+            android:fontFamily="@font/rockwellbold"
             android:gravity="center"
             android:maxLines="1"
             android:ellipsize="end"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:textSize="19sp"
+            android:textSize="18sp"
             android:text="rjathome123458@gmail.com" />
     </RelativeLayout>
 

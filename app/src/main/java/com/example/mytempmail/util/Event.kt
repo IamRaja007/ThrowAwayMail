@@ -29,10 +29,10 @@ class Event<T>(private val content: T) {
         return "Event(content=$content,hasBeenHandled=$hasBeenHandled)"
     }
 
-    companion object{
+    companion object {
 
         // we don't want an event if there's no data
-        fun <T> dataEvent(data: T?): Event<T>?{
+        fun <T> dataEvent(data: T?): Event<T>? {
             data?.let {
                 return Event(it)
             }
@@ -40,8 +40,8 @@ class Event<T>(private val content: T) {
         }
 
         // we don't want an event if there is no message
-        fun messageEvent(message: String?): Event<String>?{
-            message?.let{
+        fun messageEvent(message: String?): Event<String>? {
+            message?.let {
                 return Event(message)
             }
             return null

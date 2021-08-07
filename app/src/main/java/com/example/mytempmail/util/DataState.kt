@@ -1,9 +1,9 @@
 package com.example.mytempmail.util
 
 data class DataState<T>(
-    var message:Event<String>?=null,
-    var loading:Boolean=false,
-    var data: Event<T>?=null
+    var message: Event<String>? = null,
+    var loading: Boolean = false,
+    var data: Event<T>? = null
 ) {
     companion object {
         fun <T> error(
@@ -25,9 +25,10 @@ data class DataState<T>(
                 data = null
             )
         }
-        fun<T> data(
-            message: String?=null,
-            data: T?=null
+
+        fun <T> data(
+            message: String? = null,
+            data: T? = null
         ): DataState<T> {
             return DataState(
                 message = Event.messageEvent(message),
@@ -36,8 +37,6 @@ data class DataState<T>(
             )
         }
     }
-
-
 
     override fun toString(): String {   //we can print this data if we want
         return "DataState(message=$message, loading=$loading, data=$data)"

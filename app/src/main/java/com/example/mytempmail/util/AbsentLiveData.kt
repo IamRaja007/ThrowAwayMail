@@ -3,9 +3,9 @@ package com.example.mytempmail.util
 import androidx.lifecycle.LiveData
 
 /**
- * A LiveData class that has `null` value.
+ * A LiveData class that has `null` value. It only helps in testing.
  */
-class AbsentLiveData<T : Any?> private constructor(): LiveData<T>() {
+class AbsentLiveData<T : Any?> private constructor() : LiveData<T>() {
 
     init {
         // use post instead of set since this can be created on any thread

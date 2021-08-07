@@ -6,17 +6,17 @@ import com.google.gson.annotations.SerializedName
 data class MailBoxModel(
     @Expose
     @SerializedName("id")
-    val id:String?=null,
+    val id: String? = null,
 
     @Expose
     @SerializedName("from")
-    val from:String?=null,
+    val from: String? = null,
 
     @Expose
     @SerializedName("subject")
-    val subject:String?=null,
+    val subject: String? = null,
 
     @Expose
     @SerializedName("date")
-    val date:String?=null,
+    val date: String? = null,
 )

@@ -12,11 +12,11 @@ import com.google.gson.Gson
 
 object MainRepository {
 
-    fun getGeneratedEmail():LiveData<DataState<MainViewState>>{
-        return object: NetworkBoundResource<List<String>,MainViewState>(true){
+    fun getGeneratedEmail(): LiveData<DataState<MainViewState>> {
+        return object : NetworkBoundResource<List<String>, MainViewState>(true) {
             override fun handleApiSuccessResponse(response: ApiSuccessResponse<List<String>>) {
-                result.value=DataState.data(
-                    data= MainViewState(email = response.body[0])
+                result.value = DataState.data(
+                    data = MainViewState(email = response.body[0])
                 )
             }
 
@@ -27,13 +27,13 @@ object MainRepository {
         }.asLiveData()
     }
 
-    fun getMailBoxMessages(username:String,domain:String):LiveData<DataState<MainViewState>>{
+    fun getMailBoxMessages(username: String, domain: String): LiveData<DataState<MainViewState>> {
 
-        return object: NetworkBoundResource<List<MailBoxModel>,MainViewState>(false){
+        return object : NetworkBoundResource<List<MailBoxModel>, MainViewState>(false) {
 
             override fun handleApiSuccessResponse(response: ApiSuccessResponse<List<MailBoxModel>>) {
-                result.value=DataState.data(
-                    data= MainViewState(emailsList = response.body)
+                result.value = DataState.data(
+                    data = MainViewState(emailsList = response.body)
                 )
             }
 
@@ -44,11 +44,15 @@ object MainRepository {
         }.asLiveData()
     }
 
-    fun showSelectedMessage(username:String,domain:String,id:Int):LiveData<DataState<MainViewState>>{
-        return object: NetworkBoundResource<ShowEmailModel,MainViewState>(true){
+    fun showSelectedMessage(
+        username: String,
+        domain: String,
+        id: Int
+    ): LiveData<DataState<MainViewState>> {
+        return object : NetworkBoundResource<ShowEmailModel, MainViewState>(true) {
             override fun handleApiSuccessResponse(response: ApiSuccessResponse<ShowEmailModel>) {
-                result.value=DataState.data(
-                    data= MainViewState(showMail =response.body)
+                result.value = DataState.data(
+                    data = MainViewState(showMail = response.body)
                 )
             }
 
